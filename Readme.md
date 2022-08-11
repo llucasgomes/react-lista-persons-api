@@ -3,6 +3,7 @@
 
 <p align="center">
   <img src="https://github.com/llucasgomes/react-lista-persons-api/blob/main/src/assets/images/backgroundGitHub.png" alt="Imagem do projeto"/>
+  <img src="https://github.com/llucasgomes/react-lista-persons-api/blob/main/src/assets/images/backgroundGitHub2.png" alt="Imagem do projeto"/>
 </p>
 
 
