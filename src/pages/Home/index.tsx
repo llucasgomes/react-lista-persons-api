@@ -31,31 +31,45 @@ function Home() {
         
     }
     
-// filtro de busca
+// filtro de busca 
     const [search, setSearch] = useState('')
     const [searchCoutry, setSearchCoutry] = useState('')
-//primero filtro
-    useEffect(() => {
-       if (search.length > 0) {
-           const filter = dataFetching.filter(a =>
-               a.name.first.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
-               a.name.last.toLowerCase().indexOf(search.toLowerCase()) >= 0 
-           )
-           setDataFetching(filter)
-       } else {
-        setDataFetching(dataFetchingBackup)
-       }
-   },[search])
-//segundo filtro
-    useEffect(() => {
-       if (searchCoutry != "") {
-           const filterCountry = dataFetching.filter(a => a.location.country.toUpperCase().indexOf(searchCoutry.toUpperCase()))
-           setDataFetching(filterCountry)
+//primero filtro imput
+//     useEffect(() => {
+//        if (search.length > 0) {
+//            const filter = dataFetching.filter(a =>
+//                a.name.first.toLowerCase().indexOf(search.toLowerCase()) >= 0 ||
+//                a.name.last.toLowerCase().indexOf(search.toLowerCase()) >= 0 
+//            )
+//            setDataFetching(filter)
+//        } else {
+//         setDataFetching(dataFetchingBackup)
+//        }
+//    },[search])
+
+
+
+const filteredName = search.length > 0 
+? dataFetching.filter(a => (a.name.first.toUpperCase() || a.name.last.toUpperCase()).includes(search.toUpperCase()))
+    : [];
+    
+const filteredCountry = searchCoutry.length > 0
+? dataFetching.filter(a => a.location.country.toUpperCase().includes(searchCoutry.toUpperCase()))
+    : [];
+    
+const actuallyFilter = search.length > 0 ? filteredName : filteredCountry;
+    
+//segundo filtro select
+//     useEffect(() => {
+//        if (searchCoutry != "") {
+//            const filterCountry = dataFetching.filter(a => a.location.country.toUpperCase() == searchCoutry.toUpperCase())
+//            setDataFetching(filterCountry)
            
-       } else {
-           setDataFetching(dataFetchingBackup)
-       }
-   },[searchCoutry])
+//        } else {
+//            setDataFetching(dataFetchingBackup)
+//        }
+//    },[searchCoutry])
+
 
     
 //conexao com a API
@@ -107,7 +121,7 @@ function Home() {
                                         // value={searchCoutry}
                                         >
                                         <option value="">Todas</option>
-                                        {dataFetching.map((item, index) => (
+                                        {dataFetchingBackup.map((item, index) => (
                                             <option key={index} value={item.location.country}>{ item.location.country}</option>
                                         )
                                             
@@ -124,15 +138,44 @@ function Home() {
                                 <th>Ação</th>
                             </tr>
                             </thead>
-                            <tbody>
-                                {dataFetching.map((item, index) => (
+                                <tbody>
+                                {
+                                        searchCoutry.length > 0 || search.length > 0 ? (
+                                            actuallyFilter.map((e, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{`${e.name.first} ${e.name.last}`}</td>
+                                                        <td>{e.gender}</td>
+                                                        <td>{e.location.country}</td>
+                                                        <td>
+                                                            <button onClick={() => handleOpenModalInfo(e)}>Visualizar</button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        ) : (
+                                            dataFetching.map((e, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>{`${e.name.first} ${e.name.last}`}</td>
+                                                        <td>{e.gender}</td>
+                                                        <td>{e.location.country}</td>
+                                                        <td>
+                                                            <button onClick={() => handleOpenModalInfo(e)}>Visualizar</button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        )
+                                    }
+                                {/* {dataFetching.map((item, index) => (
                                 <tr key={index}>
                                     <td>{ `${item.name.first} ${item.name.last}`}</td>
                                     <td>{ item.gender}</td>
                                     <td>{item.nat}</td>
                                 <td><button onClick={()=> handleOpenModalInfo(item)}>visualizar</button></td>
                             </tr> 
-                                ))}
+                                ))} */}
                                 
                                 
                             </tbody>
